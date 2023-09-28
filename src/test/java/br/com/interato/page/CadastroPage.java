@@ -28,6 +28,8 @@ public class CadastroPage extends BaseTest{
     @FindBy(css = "#headlessui-dialog-panel-\\:r1\\: > form > div.grid.grid-cols-12.w-full.gap-6.p-6 > div:nth-child(10) > div > button:nth-child(2)")
     private WebElement submit;
 
+   
+
     public CadastroPage(WebDriver driver) {
         super(driver);
     }

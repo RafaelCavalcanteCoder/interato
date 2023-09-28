@@ -3,6 +3,7 @@ package br.com.interato.page;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
 import br.com.interato.BaseTest;
 
 public class HomePage extends BaseTest {
@@ -25,6 +26,9 @@ private WebElement search;
 @FindBy(css = "body > div.min-h-screen.bg-white > main > div > div > div.w-full.bg-white.p-6.rounded-lg.drop-shadow-2xl.mb-12 > div > table > tbody > tr > td:nth-child(1) > div > p")
 private WebElement resultadoDoFiltro;
 
+@FindBy(css = "body > div.min-h-screen.bg-white > nav > div > div > div.flex.items-center.h-full > div.hidden.md\\:block.h-full > div > a:nth-child(3)" )
+private WebElement buttonTerapeuta;
+
     public HomePage(WebDriver driver) {
         super(driver);
     }
@@ -40,6 +44,12 @@ private WebElement resultadoDoFiltro;
        filtroNome.click();
        search.click();
        return new HomePage(driver);
+    }
+
+    public HomePage atualizarPagina(){
+        buttonTerapeuta.click();
+        buttonPaciente.click();
+        return new HomePage(driver);
     }
 
     public String nomeDoFiltro(){

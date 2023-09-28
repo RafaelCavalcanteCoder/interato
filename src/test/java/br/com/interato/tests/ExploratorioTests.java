@@ -37,14 +37,16 @@ public class ExploratorioTests  {
     @Test
     @DisplayName("Teste Exploratório onde deve cadastrar um novo paciente")
     public void TC_001_DeveCadastrarUmNovoPaciente() {
-            String nomeDoFiltro = new HomePage(driver)
+        String nomeDoFiltro = new HomePage(driver)
             .acessarFormularioPaciente()
-            .registroNovoPaciente("Lucas brito", "lucas123456@gmail.com", "123456", "41692117823", "11940738778")
+            .registroNovoPaciente("Lucas de Brito", "lucas162257@gmail.com", "123456", "29229245054", "11940738778")
+            .atualizarPagina()
             .confirmarPacienteCadastrado()
             .nomeDoFiltro();
-      
+            
             Assertions.assertEquals("Lucas de Brito", nomeDoFiltro);
-     
-           
     }
 }
+
+     
+           
