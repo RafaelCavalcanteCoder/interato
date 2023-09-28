@@ -41,7 +41,7 @@ public class ExploratorioTests  {
             .acessarFormularioPaciente()
             .registroNovoPaciente("Lucas de Brito", "lucas162257@gmail.com", "123456", "29229245054", "11940738778")
             .atualizarPagina()
-            .confirmarPacienteCadastrado()
+            .confirmarPacienteCadastrado("Lucas de Brito")
             .nomeDoFiltro();
             
             Assertions.assertEquals("Lucas de Brito", nomeDoFiltro);

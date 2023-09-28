@@ -14,10 +14,10 @@ private WebElement buttonPaciente;
 @FindBy(css = "body > div.min-h-screen.bg-white > header > div > div > div.flex.col-span-12.md\\:col-span-2.justify-end.items-center.tracking-tight.text-sm.font-medium.leading-none > button")
 private WebElement buttonAdicionar;
 
-@FindBy(id = "radix-:Rakrb9mmja:")
+@FindBy(id = "radix-:r3:") 
 private WebElement buttonFiltro;
 
-@FindBy(css = "#radix-\\:Rakrb9mmjaH1\\: > div:nth-child(5)")
+@FindBy(xpath = "//*[@id=\"radix-:r4:\"]/div[5]") 
 private WebElement filtroNome;
 
 @FindBy(id = "search")
@@ -39,10 +39,10 @@ private WebElement buttonTerapeuta;
       return new CadastroPage(driver);
     }
 
-    public HomePage confirmarPacienteCadastrado(){
+    public HomePage confirmarPacienteCadastrado(String nome){
        buttonFiltro.click();
        filtroNome.click();
-       search.click();
+       search.sendKeys(nome);
        return new HomePage(driver);
     }
 
