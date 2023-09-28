@@ -1,0 +1,71 @@
+
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Cópia repositório executor
+      uses: actions/checkout@v3
+    
+    - uses: actions/checkout@v3
+    - name: Set up JDK 19
+      uses: actions/setup-java@v3
+      with:
+        java-version: 19
+        distribution: 'temurin'
+        cache: maven
+
+    - name: iniciar chrome
+      run: |
+        choco install chromium
+        choco install chrmedriver
+
+    - name: Instalar as Dependências do Maven
+      run: |
+        mvn clean install
+        mvn test
+        exit 0
+
+    - name: Gerar o Relatório HTML
+      run: |
+        mvn allure:report
+
+    - name: Criar uma pasta publica e enviar o relatório com os testes
+      run: |
+        mkdir public
+        cp -r target/site/allure-maven-plugin/* public
+
+  
+    - name: Realizar Deploy do relatório HTML
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
+        publish_branch: gh-pages
+        force_orphan: true
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
