@@ -4,19 +4,23 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
 trigger:
-- main
+- main  # Defina a branch que aciona o pipeline (pode ser ajustada conforme necessário)
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
-- task: Maven@3
+- task: UseJavaVersion@0
   inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+    versionSpec: '11'  # Especifique a versão do Java que você deseja usar
+
+- script: 'mvn clean install'  # Comando para construir o projeto e executar os testes
+  displayName: 'Construir e executar testes'
+
+- task: PublishTestResults@2
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+    mergeTestResults: true
+    testRunTitle: 'Execução de Testes'  # Título para a execução dos testes
+  displayName: 'Publicar resultados dos testes'
