@@ -1,26 +1,36 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
-- main  # Defina a branch que aciona o pipeline (pode ser ajustada conforme necessário)
+- main # Defina aqui o nome da branch que aciona a pipeline (pode ser 'main', 'master', ou outra de sua escolha)
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-latest' # Escolha a imagem da máquina virtual apropriada para o ambiente de build
 
 steps:
-- task: UseJavaVersion@0
-  inputs:
-    versionSpec: '11'  # Especifique a versão do Java que você deseja usar
+- script: 'echo "##vso[task.setvariable variable=JAVA_HOME]$(Agent.ToolsDirectory)/jdk/$(Agent.DefaultToolsVersion)/x64'
+  displayName: 'Set JAVA_HOME'
+  
+- script: 'export JAVA_HOME=$JAVA_HOME && export PATH=$JAVA_HOME/bin:$PATH'
+  displayName: 'Set Java Path'
 
-- script: 'mvn clean install'  # Comando para construir o projeto e executar os testes
-  displayName: 'Construir e executar testes'
+- script: 'sudo apt-get install openjdk-11-jdk -y'
+  displayName: 'Install JDK 11'
 
-- task: PublishTestResults@2
-  inputs:
-    testRunner: JUnit
-    testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
-    mergeTestResults: true
-    testRunTitle: 'Execução de Testes'  # Título para a execução dos testes
-  displayName: 'Publicar resultados dos testes'
+- script: 'java -version'
+  displayName: 'Check Java Version'
+
+- script: 'sudo apt-get install maven -y'
+  displayName: 'Install Maven'
+
+- script: 'mvn clean test'
+  displayName: 'Run Tests'
+
+- script: 'mvn surefire-report:report'
+  displayName: 'Gerar Relatório de Testes'
+
+# Comando para gerar relatórios JaCoCo de cobertura de código após os testes
+- script: 'mvn jacoco:report'
+  displayName: 'Gerar Relatório de Cobertura de Código'
+
+
+# Se você gera relatórios de testes, adicione aqui comandos para copiar ou processar os relatórios
+
+# Você pode adicionar mais etapas conforme necessário para sua configuração específica
