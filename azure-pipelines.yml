@@ -1,36 +1,26 @@
 trigger:
-- main # Defina aqui o nome da branch que aciona a pipeline (pode ser 'main', 'master', ou outra de sua escolha)
+- main # Define aqui o nome da branch que aciona a pipeline (pode ser 'main', 'master', ou outra de sua escolha)
 
 pool:
   vmImage: 'ubuntu-latest' # Escolha a imagem da máquina virtual apropriada para o ambiente de build
 
-steps:
-- script: 'echo "##vso[task.setvariable variable=JAVA_HOME]$(Agent.ToolsDirectory)/jdk/$(Agent.DefaultToolsVersion)/x64'
-  displayName: 'Set JAVA_HOME'
-  
-- script: 'export JAVA_HOME=$JAVA_HOME && export PATH=$JAVA_HOME/bin:$PATH'
-  displayName: 'Set Java Path'
+jobs:
+- job: BuildAndTest
+  displayName: 'Build and Test'
+  steps:
 
-- script: 'sudo apt-get install openjdk-11-jdk -y'
-  displayName: 'Install JDK 11'
+  - script: |
+      # Instalação do Maven
+      wget -q https://archive.apache.org/dist/maven/maven-3/3.8.4/binaries/apache-maven-3.8.4-bin.tar.gz
+      tar zxvf apache-maven-3.8.4-bin.tar.gz
+      export PATH=$(pwd)/apache-maven-3.8.4/bin:$PATH
+    displayName: 'Instalar o Maven'
 
-- script: 'java -version'
-  displayName: 'Check Java Version'
+  - script: 'mvn clean test' # Comando para construir e testar o projeto com Maven
+    displayName: 'Executar Testes'
 
-- script: 'sudo apt-get install maven -y'
-  displayName: 'Install Maven'
+  - script: 'mvn surefire-report:report' # Comando para gerar relatórios de testes com Surefire
+    displayName: 'Gerar Relatório de Testes'
 
-- script: 'mvn clean test'
-  displayName: 'Run Tests'
-
-- script: 'mvn surefire-report:report'
-  displayName: 'Gerar Relatório de Testes'
-
-# Comando para gerar relatórios JaCoCo de cobertura de código após os testes
-- script: 'mvn jacoco:report'
-  displayName: 'Gerar Relatório de Cobertura de Código'
-
-
-# Se você gera relatórios de testes, adicione aqui comandos para copiar ou processar os relatórios
-
-# Você pode adicionar mais etapas conforme necessário para sua configuração específica
+  - script: 'mvn jacoco:report' # Comando para gerar relatórios de cobertura de código com JaCoCo
+    displayName: 'Gerar Relatório de Cobertura de Código'
